@@ -24,7 +24,10 @@ Route::middleware(['auth'])->group(function(){
     // Route::get('/dashboard',function (){
     //     return view('dashboard');
     // });
-    Route::get('/dashboard',[TodoController::class,'create'])->name('dashboard');
+    Route::get('/dashboard',[TodoController::class,'index'])->name('dashboard');
     Route::post('/dashboard',[TodoController::class,'store'])->name('create.store');
+    Route::delete('/dashboard/{id}',[TodoController::class,'destroy'])->name('post.delete');
+    Route::get('/dashboard/{id}/edit',[TodoController::class,'edit'])->name('post.edit');
+    Route::put('/dashboard/{id}',[TodoController::class,'update'])->name('post.update');
     Route::post('/logout',[AuthController::class,'logout'])->name('logout');
 });
