@@ -20,6 +20,7 @@ class TodoController extends Controller
             ->where('user_id', auth::id())   // ✅ filter by logged in user
             ->latest()
             ->get();
+            // return response()->json($todos);
             return view('dashboard', compact('todos', 'categories'));
     }
 
@@ -36,14 +37,16 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        Todo::create([
+       $todo= Todo::create([
             'title' => $request->title,
             'content' => $request->content,
             'category_id' => $request->category_id,
             'user_id'     => auth::id(),
             'updated_at' => now(),
         ]);
-        return redirect('/dashboard');
+     
+        return response()->json($todo);
+        // return redirect('/dashboard');
     }
 
     /**
@@ -51,7 +54,10 @@ class TodoController extends Controller
      */
     public function show($id)
     {
-  
+        $categories = Category::all();
+        $todo = Todo::with('category')->findOrFail($id); // singular
+
+        return view('dashboard', compact('categories', 'todo'));
     }
 
     /**
@@ -86,6 +92,7 @@ class TodoController extends Controller
     {
         $todo = Todo::find($id);
         $todo->delete();
-        return redirect('/dashboard');
+        // return redirect('/dashboard');
+        return response()->json(['success' => true]);
     }
 }
